@@ -1,27 +1,27 @@
 var vm = new Vue({
     el: '#app',
-    // 修改Vue变量的读取语法，避免和django模板语法冲突
+    //Modify the reading syntax of Vue variables to avoid conflicts with django template syntax
     delimiters: ['[[', ']]'],
     data: {
         host,
         show_menu:false,
         mobile:'',
         mobile_error:false,
-        mobile_error_message:'手机号错误',
+        mobile_error_message:'Phone number error',
         password:'',
         password_error:false,
-        password_error_message:'密码错误',
+        password_error_message:'wrong password',
         password2:'',
         password2_error:false,
-        password2_error_message:'密码不一致',
+        password2_error_message:'Inconsistent passwords',
         uuid:'',
         image_code:'',
         image_code_error:false,
-        image_code_error_message:'图片验证码错误',
+        image_code_error_message:'Image verification code error',
         sms_code:'',
         sms_code_error:false,
-        sms_code_error_message:'短信验证码错误',
-        sms_code_message:'点击获取验证码',
+        sms_code_error_message:'SMS verification code error',
+        sms_code_message:'Click for authentication code',
         sending_flag:false,
         image_code_url:''
     },
@@ -29,7 +29,7 @@ var vm = new Vue({
         this.generate_image_code()
     },
     methods: {
-        //显示下拉菜单
+        //Show drop-down menu
         show_menu_click:function(){
             this.show_menu = !this.show_menu ;
         },
@@ -45,14 +45,14 @@ var vm = new Vue({
             });
             return uuid;
         },
-        // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
+        // Generate an image verification code number, and set the src attribute of the image verification code img tag on the page
         generate_image_code: function () {
-            // 生成一个编号 : 严格一点的使用uuid保证编号唯一， 不是很严谨的情况下，也可以使用时间戳
+            // Generate a number: Use uuid more strictly to ensure that the number is unique. If it is not very strict, you can also use a timestamp
             this.uuid = this.generateUUID();
-            // 设置页面中图片验证码img标签的src属性
+            // Set the src attribute of the image verification code img tag in the page
             this.image_code_url = this.host + "/imagecode/?uuid=" + this.uuid;
         },
-        //检查手机号
+        //Check mobile number
         check_mobile: function(){
             var re = /^1[3-9]\d{9}$/;
             if (re.test(this.mobile)) {
@@ -61,7 +61,7 @@ var vm = new Vue({
                 this.mobile_error = true;
             }
         },
-        //检查密码
+        //Check password
         check_password:function () {
             var re = /^[0-9A-Za-z]{8,20}$/;
             if (re.test(this.password)) {
@@ -71,7 +71,7 @@ var vm = new Vue({
             }
 
         },
-        //检查确认密码
+        //Check confirm password
         check_password2:function () {
             if (this.password != this.password2) {
                 this.password2_error = true;
@@ -79,7 +79,7 @@ var vm = new Vue({
                 this.password2_error = false;
             }
         },
-        //检查验证码
+        //Check the verification code
         check_image_code:function () {
             if (!this.image_code) {
                 this.image_code_error = true;
@@ -87,7 +87,7 @@ var vm = new Vue({
                 this.image_code_error = false;
             }
         },
-        //检查短信验证码
+        //Check SMS verification code
         check_sms_code:function () {
             if (!this.sms_code) {
                 this.sms_code_error = true;
@@ -95,14 +95,14 @@ var vm = new Vue({
                 this.sms_code_error = false;
             }
         },
-        //发送短信验证码
+        //Send SMS verification code
         send_sms_code:function () {
             if (this.sending_flag == true) {
                 return;
             }
             this.sending_flag = true;
 
-            // 校验参数，保证输入框有数据填写
+            // Check the parameters to ensure that the input box has data
             this.check_mobile();
             this.check_image_code();
 
@@ -111,34 +111,34 @@ var vm = new Vue({
                 return;
             }
 
-            // 向后端接口发送请求，让后端发送短信验证码
+            // Send a request to the back-end interface to send the back-end SMS verification code
             var url = this.host + '/smscode/?mobile=' + this.mobile + '&image_code=' + this.image_code + '&uuid=' + this.uuid;
             axios.get(url, {
                 responseType: 'json'
             })
                 .then(response => {
-                    // 表示后端发送短信成功
+                    // Indicates that the backend sent SMS successfully
                     if (response.data.code == '0') {
-                        // 倒计时60秒，60秒后允许用户再次点击发送短信验证码的按钮
+                        // Countdown 60 seconds, after 60 seconds, the user is allowed to click the button to send the SMS verification code again
                         var num = 60;
-                        // 设置一个计时器
+                        // Set a timer
                         var t = setInterval(() => {
                             if (num == 1) {
-                                // 如果计时器到最后, 清除计时器对象
+                                // If the timer reaches the end, clear the timer object
                                 clearInterval(t);
-                                // 将点击获取验证码的按钮展示的文本回复成原始文本
-                                this.sms_code_message = '获取短信验证码';
-                                // 将点击按钮的onclick事件函数恢复回去
+                                // Reply the text displayed by clicking the button to obtain the verification code into the original text
+                                this.sms_code_message = 'get SMS verification code';
+                                // Restore the onclick event function of the clicked button back
                                 this.sending_flag = false;
                             } else {
                                 num -= 1;
-                                // 展示倒计时信息
-                                this.sms_code_message = num + '秒';
+                                // Show countdown information
+                                this.sms_code_message = num + 's';
                             }
                         }, 1000, 60)
                     } else {
                         if (response.data.code == '4001') {
-                            //图片验证码错误
+                            //Image verification code error
                             this.image_code_error = true;
                         }
                         this.sms_code_error = true;
@@ -151,7 +151,7 @@ var vm = new Vue({
                     this.sending_flag = false;
                 })
         },
-        //提交
+        //submit
         on_submit:function () {
             this.check_mobile();
             this.check_password();
@@ -160,7 +160,7 @@ var vm = new Vue({
 
             if (this.mobile_error == true || this.password_error == true || this.password2_error == true
                 || this.image_code_error == true || this.sms_code_error == true) {
-                // 不满足注册条件：禁用表单
+                // Does not meet the registration conditions: disable the form
                 window.event.returnValue = false;
             }
         }
