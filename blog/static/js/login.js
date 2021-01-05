@@ -5,7 +5,7 @@ var vm = new Vue({
     data: {
         host,
         show_menu:false,
-        mobile:'',
+        username:'',
         password:'',
         remembered:'',
     },
@@ -18,11 +18,11 @@ var vm = new Vue({
             this.show_menu = !this.show_menu ;
         },
         //检查手机号
-        check_mobile:function () {
+        check_username:function () {
             
         },
         //检查密码
-        check_mobile:function () {
+        check_username:function () {
             
         },
         //提交

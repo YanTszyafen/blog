@@ -8,4 +8,7 @@ urlpatterns = [
 
     #Image verification code routing
     path('imagecode/', ImageCodeView.as_view(), name='imagecode'),
+
+    #Check information
+    # path('check/', CheckView.as_view(), name='check'),
 ]

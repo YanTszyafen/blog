@@ -5,12 +5,12 @@ var vm = new Vue({
     data: {
         host,
         show_menu:false,
-        mobile:'',
-        mobile_error:false,
-        mobile_error_message:'Phone number error',
+        username:'',
+        username_error:false,
+        username_error_message:'Username error',
         password:'',
         password_error:false,
-        password_error_message:'wrong password',
+        password_error_message:'Wrong password',
         password2:'',
         password2_error:false,
         password2_error_message:'Inconsistent passwords',
@@ -18,11 +18,6 @@ var vm = new Vue({
         image_code:'',
         image_code_error:false,
         image_code_error_message:'Image verification code error',
-        sms_code:'',
-        sms_code_error:false,
-        sms_code_error_message:'SMS verification code error',
-        sms_code_message:'Click for authentication code',
-        sending_flag:false,
         image_code_url:''
     },
     mounted(){
@@ -52,13 +47,13 @@ var vm = new Vue({
             // Set the src attribute of the image verification code img tag in the page
             this.image_code_url = this.host + "/imagecode/?uuid=" + this.uuid;
         },
-        //Check mobile number
-        check_mobile: function(){
-            var re = /^1[3-9]\d{9}$/;
-            if (re.test(this.mobile)) {
-                this.mobile_error = false;
+        //Check username
+        check_username: function(){
+            var re = /^[0-9A-Za-z]{4,15}$/;
+            if (re.test(this.username)) {
+                this.username_error = false;
             } else {
-                this.mobile_error = true;
+                this.username_error = true;
             }
         },
         //Check password
@@ -87,79 +82,15 @@ var vm = new Vue({
                 this.image_code_error = false;
             }
         },
-        //Check SMS verification code
-        check_sms_code:function () {
-            if (!this.sms_code) {
-                this.sms_code_error = true;
-            } else {
-                this.sms_code_error = false;
-            }
-        },
-        //Send SMS verification code
-        send_sms_code:function () {
-            if (this.sending_flag == true) {
-                return;
-            }
-            this.sending_flag = true;
-
-            // Check the parameters to ensure that the input box has data
-            this.check_mobile();
-            this.check_image_code();
-
-            if (this.mobile_error == true || this.image_code_error == true) {
-                this.sending_flag = false;
-                return;
-            }
-
-            // Send a request to the back-end interface to send the back-end SMS verification code
-            var url = this.host + '/smscode/?mobile=' + this.mobile + '&image_code=' + this.image_code + '&uuid=' + this.uuid;
-            axios.get(url, {
-                responseType: 'json'
-            })
-                .then(response => {
-                    // Indicates that the backend sent SMS successfully
-                    if (response.data.code == '0') {
-                        // Countdown 60 seconds, after 60 seconds, the user is allowed to click the button to send the SMS verification code again
-                        var num = 60;
-                        // Set a timer
-                        var t = setInterval(() => {
-                            if (num == 1) {
-                                // If the timer reaches the end, clear the timer object
-                                clearInterval(t);
-                                // Reply the text displayed by clicking the button to obtain the verification code into the original text
-                                this.sms_code_message = 'get SMS verification code';
-                                // Restore the onclick event function of the clicked button back
-                                this.sending_flag = false;
-                            } else {
-                                num -= 1;
-                                // Show countdown information
-                                this.sms_code_message = num + 's';
-                            }
-                        }, 1000, 60)
-                    } else {
-                        if (response.data.code == '4001') {
-                            //Image verification code error
-                            this.image_code_error = true;
-                        }
-                        this.sms_code_error = true;
-                        this.generate_image_code();
-                        this.sending_flag = false;
-                    }
-                })
-                .catch(error => {
-                    console.log(error.response);
-                    this.sending_flag = false;
-                })
-        },
+        
         //submit
         on_submit:function () {
-            this.check_mobile();
+            this.check_username();
             this.check_password();
             this.check_password2();
-            this.check_sms_code();
 
-            if (this.mobile_error == true || this.password_error == true || this.password2_error == true
-                || this.image_code_error == true || this.sms_code_error == true) {
+            if (this.username_error == true || this.password_error == true || this.password2_error == true
+                || this.image_code_error == true) {
                 // Does not meet the registration conditions: disable the form
                 window.event.returnValue = false;
             }

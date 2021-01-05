@@ -80,9 +80,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # 数据库引擎
         'HOST': '127.0.0.1', # 数据库主机
         'PORT': 3306, # 数据库端口
-        'USER': 'yangjf', # 数据库用户名
-        'PASSWORD': '123456', # 数据库用户密码
-        'NAME': 'blog_db' # 数据库名字
+        'USER': 'yangtzsyafeng', # 数据库用户名
+        'PASSWORD': '12345678', # 数据库用户密码
+        'NAME': 'blog3' # 数据库名字
     },
 }
 
@@ -133,14 +133,14 @@ STATICFILES_DIRS=[
 CACHES = {
     "default": { # default
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://127.0.0.1:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
     "session": { # session
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379/3",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
