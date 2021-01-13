@@ -116,3 +116,64 @@ class ImageCodeView(View):
         # 5. Return image binary
         return HttpResponse(image,content_type='image/jpeg')
 
+
+class LoginView(View):
+
+    def get(self,request):
+
+        return render(request,'login.html')
+
+    def post(self,request):
+        """
+            1. Reception of parameters
+            2. Verification of parameters
+                2.1 Verification of username
+                2.2 Verification of password
+            3. User authentication login
+            4. Keeping status
+            5. Remember me or not
+            6. Setting for info of cookie to show the homepage
+            7. return response
+            :param request:
+            :return:
+        """
+        #1. Reception of parameters
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remember = request.POST.get('remember')
+
+        # 2. Verification of parameters
+        #     2.1 Verification of username
+        if not re.match(r'^[0-9A-Za-z]{4,15}$', username):
+            return HttpResponseBadRequest('Username does not conform to the rules!')
+        #     2.2 Verification of password
+        if not re.match(r'^[0-9A-Za-z]{8,20}$',password):
+            return HttpResponseBadRequest('Password does not conform to the rules!')
+        # 3. User authentication login
+        # Use the systematic authentication method for authentication.
+        # If the username and password are correct, return user, else return None
+        from django.contrib.auth import authenticate
+        # The default of authentication method is aimed to judge the username for the field username
+        user = authenticate(username=username,password=password)
+        if user is None:
+            return HttpResponseBadRequest('Wrong username or password!')
+
+        # 4. Keeping status
+        from django.contrib.auth import login
+        login(request, user)
+
+        # 5. Remember me or not
+        # 6. Setting for info of cookie to show the homepage
+        response = redirect(reverse('home:index'))
+        if remember != 'on':#did not remember the info of user
+            #after the browser is closed
+            request.session.set_expiry(0)
+            response.set_cookie('is_login', True)
+            response.set_cookie('username',user.username,max_age=14*24*3600)
+        else:#remembered the info of user
+            request.session.set_expiry(None) #default time is 2 weeks
+            response.set_cookie('is_login',True, max_age=14*24*3600)
+            response.set_cookie('username',user.username,max_age=14*24*3600)
+
+        # 7. return response
+        return response
