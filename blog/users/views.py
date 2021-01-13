@@ -68,11 +68,19 @@ class RegisterView(View):
         except DatabaseError as e:
             logger.error(e)
             return HttpResponseBadRequest('Registration failed!')
+
+        from django.contrib.auth import login
+        login(request,user)
+
         # 4. Return the response and jump to the specified page
         # return HttpResponse('Registration is successful!')
         #redirect
         #reverse: The route corresponding to the view can be obtained through the namespace:name
-        return redirect(reverse('home:index'))
+        response = redirect(reverse('home:index'))
+        #setting for info of cookie to show the info of user in homepage
+        response.set_cookie('is_login', True)
+        response.set_cookie('username',user.username,max_age=7*24*3600)
+        return response
 
 
 
