@@ -32,6 +32,8 @@ urlpatterns = [
     #The parameters of include: urlconf_module, app_name
     #urlconf_module: Content of sub-application
     #app_name: Name of sub-application
-    path('',include(('users.urls', 'users'), namespace='users'))
+    path('',include(('users.urls', 'users'), namespace='users')),
     #path('', log),
+
+    path('',include(('home.urls','home'),namespace='home')),
 ]

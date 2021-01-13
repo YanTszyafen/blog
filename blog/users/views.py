@@ -1,5 +1,6 @@
 from django.shortcuts import render
-
+from django.shortcuts import redirect
+from django.urls import reverse
 # Create your views here.
 
 from django.views import View
@@ -68,8 +69,10 @@ class RegisterView(View):
             logger.error(e)
             return HttpResponseBadRequest('Registration failed!')
         # 4. Return the response and jump to the specified page
-        #暂时返回注册成功的信息，后期再实现跳转到指定页面
-        return HttpResponse('Registration is successful!')
+        # return HttpResponse('Registration is successful!')
+        #redirect
+        #reverse: The route corresponding to the view can be obtained through the namespace:name
+        return redirect(reverse('home:index'))
 
 
 
