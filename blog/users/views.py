@@ -22,6 +22,7 @@ class RegisterView(View):
             2.2 Verify that the username format is correct
             2.3 Verify that the password format is correct
             2.4 Whether the password and confirm password are the same
+            2.5 Verify that the verification code is correct
         3. Save registration information
         4. Return the response and jump to the specified page
         :param request:
@@ -192,5 +193,73 @@ class LogoutView(View):
 
 
 class ForgetPasswordView(View):
+
     def get(self,request):
         return render(request,'forget_password.html')
+
+    def post(self,request):
+        """
+        1. Receive data
+        2. Verify data
+            2.1 Determine whether the parameters are complete
+            2.2 Verify that the username format is correct
+            2.3 Verify that the password format is correct
+            2.4 Whether the password and confirm password are the same
+            2.5 Verify that the verification code is correct
+        3. Query user information based on username
+        4. If exists this username, reset the password
+        5. else create new user
+        6. Redirect to login page
+        7. Return response
+        :param request:
+        :return:
+        """
+        # 1. Receive data
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        image_code = request.POST.get('imgage_code')
+        redis_conn = get_redis_connection('default')
+        redis_image_code = redis_conn.get('code')
+        # 2. Verify data
+        #     2.1 Determine whether the parameters are complete
+        if not all([username,password,password2,image_code]):
+            return HttpResponseBadRequest('Missing required parameters!')
+        #     2.2 Verify that the username format is correct
+        if not re.match(r'^[0-9A-Za-z]{4,15}$',username):
+            return HttpResponseBadRequest('Please enter 4-15 characters, the username is composed of numbers or letters!')
+        #     2.3 Verify that the password format is correct
+        if not re.match(r'^[0-9A-Za-z]{8,20}$',password):
+            return HttpResponseBadRequest('Please enter 8-20 characters, the password is composed of numbers or letters!')
+        #     2.4 Whether the password and confirm password are the same
+        if password != password2:
+            return HttpResponseBadRequest('The two passwords are inconsistent!')
+        #     2.5 Verify that the verification code is correct
+        # Determine whether the image verification code exists
+        if redis_image_code is None:
+            return HttpResponseBadRequest('Image verification code has expired!')
+        #If the image verification code has not expired, we can delete the image verification code after we obtain it.
+        try:
+            redis_conn.delete('code')
+        except Exception as e:
+            logger.error(e)
+        #Compare image verification code, pay attention to the problem of capitalization, and redis data is of type bytes
+        if redis_image_code.decode().lower() != image_code.lower():
+            return HttpResponseBadRequest('Image verification code error!')
+        # 3. Query user information based on username
+        try:
+            user = User.objects.get(username = username)
+        except User.DoesNotExist:
+            # 5. else create new user
+            try:
+                User.objects.create_user(username=username,password=password)
+            except Exception:
+                return HttpResponseBadRequest('The modification failed, please try again later!')
+        else:
+            # 4. If exists this username, reset the password
+            user.set_password(password)
+            user.save()
+        # 6. Redirect to login page
+        response = redirect(reverse('users:login'))
+        # 7. Return response
+        return response

@@ -1,22 +1,23 @@
 var vm = new Vue({
     el: '#app',
-    // 修改Vue变量的读取语法，避免和django模板语法冲突
+
     delimiters: ['[[', ']]'],
     data: {
         host,
         show_menu:false,
         username:'',
         username_error:false,
-        username_error_message:'手机号错误',
+        username_error_message:'Username error',
         password:'',
         password_error:false,
-        password_error_message:'密码错误',
+        password_error_message:'Wrong password',
         password2:'',
         password2_error:false,
-        password2_error_message:'密码不一致',
+        password2_error_message:'Inconsistent passwords',
+        uuid:'',
         image_code:'',
         image_code_error:false,
-        image_code_error_message:'图片验证码错误',
+        image_code_error_message:'Image verification code error',
         image_code_url:''
     },
     mounted(){
@@ -35,14 +36,14 @@ var vm = new Vue({
             });
             return uuid;
         },
-        // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
+
         generate_image_code: function () {
-            // 生成一个编号 : 严格一点的使用uuid保证编号唯一， 不是很严谨的情况下，也可以使用时间戳
+
             this.uuid = this.generateUUID();
-            // 设置页面中图片验证码img标签的src属性
+
             this.image_code_url = this.host + "/imagecode/?uuid=" + this.uuid;
         },
-        //检查手机号
+
         check_username: function(){
             var re = /^[0-9A-Za-z]{4,15}$/;
             if (re.test(this.username)) {
@@ -51,7 +52,7 @@ var vm = new Vue({
                 this.username_error = true;
             }
         },
-        //检查密码
+
         check_password:function () {
             var re = /^[0-9A-Za-z]{8,20}$/;
             if (re.test(this.password)) {
@@ -60,7 +61,7 @@ var vm = new Vue({
                 this.password_error = true;
             }
         },
-        //检查确认密码
+
         check_password2:function () {
             if (this.password != this.password2) {
                 this.password2_error = true;
@@ -68,7 +69,7 @@ var vm = new Vue({
                 this.password2_error = false;
             }
         },
-        //检查验证码
+
         check_image_code:function () {
             if (!this.image_code) {
                 this.image_code_error = true;
@@ -76,7 +77,7 @@ var vm = new Vue({
                 this.image_code_error = false;
             }
         },
-        //提交
+
         on_submit:function () {
             this.check_username();
             this.check_password();
@@ -84,7 +85,7 @@ var vm = new Vue({
 
             if (this.username_error == true || this.password_error == true || this.password2_error == true
                 || this.image_code_error == true) {
-                // 不满足注册条件：禁用表单
+
                 window.returnValue = false;
             }
         }
