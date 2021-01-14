@@ -195,3 +195,6 @@ LOGGING = {
 #Replace the User of the system to use the User defined by ourselves
 #The configuration information is "Sub-application name. Model type"
 AUTH_USER_MODEL='users.User'
+
+#modify the default redirect link when user is not logged in
+LOGIN_URL='/login/'

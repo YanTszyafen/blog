@@ -165,7 +165,14 @@ class LoginView(View):
 
         # 5. Remember me or not
         # 6. Setting for info of cookie to show the homepage
-        response = redirect(reverse('home:index'))
+
+        #redirect to the page based on the next parameter
+        next_page = request.GET.get('next')
+        if next_page:
+            response=redirect(next_page)
+        else:
+            response = redirect(reverse('home:index'))
+
         if remember != 'on':#did not remember the info of user
             #after the browser is closed
             request.session.set_expiry(0)
@@ -264,7 +271,9 @@ class ForgetPasswordView(View):
         # 7. Return response
         return response
 
-
-class UserCenterView(View):
+from django.contrib.auth.mixins import LoginRequiredMixin
+#LoginRequiredMixin: If the user is not logged in, the default redirect will be performed
+# The default redirect link is: accounts/login/?next=xxx
+class UserCenterView(LoginRequiredMixin, View):
     def get(self,request):
         return render(request,'center.html')
