@@ -1,6 +1,6 @@
 var vm = new Vue({
     el: '#app',
-    // 修改Vue变量的读取语法，避免和django模板语法冲突
+    // Modify the reading syntax of Vue variables to avoid conflicts with django template syntax
     delimiters: ['[[', ']]'],
     data: {
         host,
@@ -14,7 +14,7 @@ var vm = new Vue({
         //this.is_login=true
     },
     methods: {
-        //显示下拉菜单
+        //show the menu
         show_menu_click:function(){
             this.show_menu = !this.show_menu ;
         },

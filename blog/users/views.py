@@ -177,3 +177,15 @@ class LoginView(View):
 
         # 7. return response
         return response
+
+
+from django.contrib.auth import logout
+class LogoutView(View):
+    def get(self,request):
+        # 1.delete session data
+        logout(request)
+        # 2.delete some cookie data
+        response = redirect(reverse('home:index'))
+        response.delete_cookie('is_login')
+        # 3.redirect to the homepage
+        return response

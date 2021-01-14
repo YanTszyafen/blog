@@ -24,7 +24,7 @@
     <div class="container">
 
         <div>
-            <a class="navbar-brand" href="index.html">The Film Blog</a>
+            <a class="navbar-brand" href="{% url 'home:index' %}">The Film Blog</a>
         </div>
     </div>
     <div class="navbar-collapse">
@@ -69,7 +69,7 @@
 </footer>
 
 </div>
-<!-- 引入js -->
+
 <script type="text/javascript" src="{% static 'js/host.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
