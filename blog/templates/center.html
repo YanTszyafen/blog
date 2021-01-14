@@ -52,10 +52,11 @@
             <div class="col-12">
                 <br>
                 <form method="post" enctype="multipart/form-data">
+                 {% csrf_token %}
                     <!-- username -->
                 <div class="form-group col-md-4">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="{{ username }}" >
+                    <input type="text" class="form-control" disabled="disabled" id="username" name="username" value="{{ username }}" >
                 </div>
                 <br> <div class="col-md-4">Avatar</div>
                     {% if avatar %}

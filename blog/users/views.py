@@ -275,6 +275,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 #LoginRequiredMixin: If the user is not logged in, the default redirect will be performed
 # The default redirect link is: accounts/login/?next=xxx
 class UserCenterView(LoginRequiredMixin, View):
+
     def get(self,request):
         # get the information of user
         user = request.user
@@ -285,3 +286,32 @@ class UserCenterView(LoginRequiredMixin, View):
             'user_desc': user.user_desc
         }
         return render(request,'center.html',context=context)
+
+    def post(self, request):
+        """
+        1. Receive parameters
+        2. Save parameters
+        3. Refresh the current page (redirect operation)
+        4. Return response
+        :param request:
+        :return:
+        """
+        user = request.user
+        #1. Receive parameters
+        username = request.POST.get('username',user.username)
+        user_desc = request.POST.get('desc',user.user_desc)
+        avatar = request.FILES.get('avatar')
+        # 2. Save parameters
+        try:
+            user.username=username
+            user.user_desc=user_desc
+            if avatar:
+                user.avatar=avatar
+            user.save()
+        except Exception as e:
+            logger.error(e)
+            return HttpResponseBadRequest('The modification failed, please try again later!')
+        # 3. Refresh the current page (redirect operation)
+        response = redirect(reverse('users:center'))
+        # 4. Return response
+        return response

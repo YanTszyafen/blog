@@ -198,3 +198,9 @@ AUTH_USER_MODEL='users.User'
 
 #modify the default redirect link when user is not logged in
 LOGIN_URL='/login/'
+
+#setting for the uploaded pictures,save them to the directory 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+#setting for the unified route for image access.
+MEDIA_URL = '/meida/'
