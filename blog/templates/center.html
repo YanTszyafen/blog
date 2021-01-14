@@ -7,11 +7,11 @@
     <meta charset="utf-8">
 
     <title> Personal Information </title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-
-    <script type="text/javascript" src="js/vue-2.5.16.js"></script>
-    <script type="text/javascript" src="js/axios-0.18.0.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/vue-2.5.16.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/axios-0.18.0.min.js' %}"></script>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
     <div class="container">
 
         <div>
-            <a class="navbar-brand" href="../templates/index.html">The Film Blog</a>
+            <a class="navbar-brand" href="{% url 'home:index' %}">The Film Blog</a>
         </div>
     </div>
 
@@ -30,16 +30,16 @@
         <ul class="nav navbar-nav">
 
             <li class="nav-item dropdown" v-if="is_login">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="show_menu_click">admin</a>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="show_menu_click">[[username]]</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="display: block" v-show="show_menu">
-                    <a class="dropdown-item" href="write_blog.html">Write Blog</a>
-                    <a class="dropdown-item" href='./center.html'>Personal Information</a>
-                    <a class="dropdown-item" href='#'>Sign out</a>
+                    <a class="dropdown-item" href="../static/write_blog.html">Write Blog</a>
+                    <a class="dropdown-item" href='{% url 'users:center' %}'>Personal Information</a>
+                    <a class="dropdown-item" href='{% url 'users:logout' %}'>Sign out</a>
                 </div>
             </li>
 
             <li class="nav-item" v-else>
-                <a class="nav-link" href="../templates/login.html">Log in</a>
+                <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
             </li>
 
         </ul>
@@ -58,7 +58,7 @@
                     <input type="text" class="form-control" id="username" name="username" value="admin" >
                 </div>
                 <br> <div class="col-md-4">Avatar</div>
-                <img src="img/avatar.jpg" style="max-width: 20%;" class="col-md-4"><br>
+                <img src="../static/img/avatar.jpg" style="max-width: 20%;" class="col-md-4"><br>
                     <!-- avatar -->
                     <div class="form-group col-md-4">
                         <label for="avatar">Upload avatar</label>
@@ -92,9 +92,9 @@
 </footer>
 </div>
 <!-- 引入js -->
-<script type="text/javascript" src="js/host.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/center.js"></script>
+<script type="text/javascript" src="{% static 'js/host.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/center.js' %}"></script>
 </body>
 
 </html>

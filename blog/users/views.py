@@ -263,3 +263,8 @@ class ForgetPasswordView(View):
         response = redirect(reverse('users:login'))
         # 7. Return response
         return response
+
+
+class UserCenterView(View):
+    def get(self,request):
+        return render(request,'center.html')

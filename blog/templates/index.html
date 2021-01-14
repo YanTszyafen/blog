@@ -50,7 +50,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="show_menu_click">[[username]]</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="display: block" v-show="show_menu">
                         <a class="dropdown-item" href="../static/write_blog.html">Write a blog</a>
-                        <a class="dropdown-item" href='../static/center.html'>Personal Information</a>
+                        <a class="dropdown-item" href='{% url 'users:center' %}'>Personal Information</a>
                         <a class="dropdown-item" href='{% url 'users:logout' %}'>Log out</a>
                     </div>
                 </li>
