@@ -55,10 +55,15 @@
                     <!-- username -->
                 <div class="form-group col-md-4">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="admin" >
+                    <input type="text" class="form-control" id="username" name="username" value="{{ username }}" >
                 </div>
                 <br> <div class="col-md-4">Avatar</div>
-                <img src="../static/img/avatar.jpg" style="max-width: 20%;" class="col-md-4"><br>
+                    {% if avatar %}
+                        <img src="{{ avatar }}" style="max-width: 20%;" class="col-md-4"><br>
+                    {% else %}
+                        <img src="{% static 'img/avatar.jpg' %}" style="max-width: 20%;" class="col-md-4"><br>
+                    {% endif %}
+
                     <!-- avatar -->
                     <div class="form-group col-md-4">
                         <label for="avatar">Upload avatar</label>
@@ -66,15 +71,15 @@
                     </div>
 
                     <!-- phone -->
-                    <div class="form-group col-md-4">
-                        <label for="phone">Phone number</label>
-                        <input type="text" class="form-control" disabled="disabled" id="phone" name="phone" value="">
-                    </div>
+{#                    <div class="form-group col-md-4">#}
+{#                        <label for="phone">Phone number</label>#}
+{#                        <input type="text" class="form-control" disabled="disabled" id="phone" name="phone" value="{{ mobile }}">#}
+{#                    </div>#}
                     <!-- desc -->
                     <div class="form-group col-md-4">
                         <label for="desc">Introduction</label>
 
-                        <textarea type="text" class="form-control" id="desc" name="desc" rows="12" ></textarea>
+                        <textarea type="text" class="form-control" id="desc" name="desc" rows="12" >{{ user_desc }}</textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary" style="margin-left: 12px" >Submit</button>

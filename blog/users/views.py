@@ -276,4 +276,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # The default redirect link is: accounts/login/?next=xxx
 class UserCenterView(LoginRequiredMixin, View):
     def get(self,request):
-        return render(request,'center.html')
+        # get the information of user
+        user = request.user
+        context = {
+            'username': user.username,
+            #'mobile': user.mobile,
+            'avatar': user.avatar.url if user.avatar else None,
+            'user_desc': user.user_desc
+        }
+        return render(request,'center.html',context=context)
