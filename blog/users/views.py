@@ -317,7 +317,15 @@ class UserCenterView(LoginRequiredMixin, View):
         return response
 
 
-class WriteBlogView(View):
+from home.models import ArticleCategory
+class WriteBlogView(LoginRequiredMixin,View):
 
     def get(self,request):
-        return render(request,'write_blog.html')
+        #Query all categories models
+        categories = ArticleCategory.objects.all()
+
+        context = {
+            'categories':categories
+        }
+
+        return render(request,'write_blog.html',context=context)

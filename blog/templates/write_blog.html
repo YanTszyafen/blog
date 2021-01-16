@@ -73,14 +73,16 @@
                 <div class="form-group">
                     <label for="category">Category</label>
                     <select class="form-control col-3" id="category" name="category">
-                            <option value="none">Please select category</option>
-                        
-                            <option value="1">News</option>
-                        
-                            <option value="2">Reviews</option>
-                        
-                            <option value="3">Previews</option>
-                        
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.title }}</option>
+                        {% endfor %}
+{#                            <option value="none">Please select category</option>#}
+{#                        #}
+{#                            <option value="1">News</option>#}
+{#                        #}
+{#                            <option value="2">Reviews</option>#}
+{#                        #}
+{#                            <option value="3">Previews</option>#}
                     </select>
                 </div>
 
