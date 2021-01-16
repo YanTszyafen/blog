@@ -315,3 +315,9 @@ class UserCenterView(LoginRequiredMixin, View):
         response = redirect(reverse('users:center'))
         # 4. Return response
         return response
+
+
+class WriteBlogView(View):
+
+    def get(self,request):
+        return render(request,'write_blog.html')
