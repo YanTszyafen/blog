@@ -317,7 +317,7 @@ class UserCenterView(LoginRequiredMixin, View):
         return response
 
 
-from home.models import ArticleCategory
+from home.models import ArticleCategory,Article
 class WriteBlogView(LoginRequiredMixin,View):
 
     def get(self,request):
@@ -329,3 +329,42 @@ class WriteBlogView(LoginRequiredMixin,View):
         }
 
         return render(request,'write_blog.html',context=context)
+
+    def post(self,request):
+        """
+        1. Recieve data
+        2. Vertify data
+        3. Save data
+        4. Redirect
+
+        :param request:
+        :return:
+        """
+        #1. Recieve data
+        avatar = request.FILES.get('avatar')
+        title = request.POST.get('title')
+        category_id = request.POST.get('category')
+        content = request.POST.get('content')
+        author = request.user
+        # 2. Vertify data
+        #   2.1 Determine whether the parameters are complete
+        if not all([avatar,title,category_id,content,author]):
+            return HttpResponseBadRequest('Missing required parameters!')
+        #   2.2 Verify category_id
+        try:
+            category = ArticleCategory.objects.get(id=category_id)
+        except ArticleCategory.DoesNotExist:
+            return HttpResponseBadRequest('No such category!')
+        # 3. Save data
+        try:
+            article = Article.objects.create(
+                author=author,
+                avatar=avatar,
+                category=category,
+                content=content
+            )
+        except Exception as e:
+            logger.error(e)
+            return HttpResponseBadRequest('Post failed, please try again later!')
+        # 4. Redirect
+        return redirect(reverse('home:index'))
