@@ -360,6 +360,7 @@ class WriteBlogView(LoginRequiredMixin,View):
             article = Article.objects.create(
                 author=author,
                 avatar=avatar,
+                title=title,
                 category=category,
                 content=content
             )

@@ -25,7 +25,7 @@ class Article(models.Model):
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     #author = models.CharField(max_length=50, blank=True)
     avatar = models.ImageField(upload_to='article/%Y%m%d/',blank=True)
-    title = models.CharField(max_length=50,blank=True)
+    title = models.CharField(max_length=120,blank=True)
     category = models.ForeignKey(ArticleCategory,null=True,blank=True,on_delete=models.CASCADE,related_name='article')
     #tags = models.CharField(max_length=50,blank=True)
     #summary = models.CharField(max_length=600,null=False,blank=False)
