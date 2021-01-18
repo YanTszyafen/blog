@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     
     <title>404</title>
-    
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 
 </head>
 
@@ -20,7 +20,7 @@
     <div class="container">
         
         <div>
-            <a class="navbar-brand" href="../templates/index.html">The Film Blog</a>
+            <a class="navbar-brand" href="{% url 'home:index' %}">The Film Blog</a>
         </div>
     </div>
     
@@ -29,10 +29,10 @@
 </nav>
 <!--content-->
 <div class="container" style="height: 450px;margin-top: 20px">
-    <div align="center"><img src="img/404.jpg" alt=""></div>
+    <div align="center"><img src="{% static 'img/404.jpg' %}" alt=""></div>
     <br>
     <div style="text-align: center;">
-        <a href="../templates/index.html" class="primaryAction btn btn-primary">Back to homepage</a>
+        <a href="{% url 'home:index' %}" class="primaryAction btn btn-primary">Back to homepage</a>
     </div>
 </div>
 

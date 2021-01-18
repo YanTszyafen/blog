@@ -70,7 +70,7 @@ class DetailView(View):
         try:
             article = Article.objects.get(id=id)
         except Article.DoesNotExist:
-            pass
+            return render(request,'404.html')
         # 3. Query category data
         categories = ArticleCategory.objects.all()
         # 4. Translate data to templates
