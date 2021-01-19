@@ -85,11 +85,13 @@
             
             <hr>
             <br>
-        <h5 class="row justify-content-center" v-show="!is_login"><p>Please <a href="login.html"> Log in </a> to comment</p>
+        <h5 class="row justify-content-center" v-show="!is_login"><p>Please <a href="{% url 'users:login' %}"> Log in </a> to comment</p>
             </h5>
             <br>
             <div>
                 <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ article.id }}">
                 <div class="form-group"><label for="body"><strong>I also want to comment:</strong></label>
                     <div>
 
@@ -106,48 +108,18 @@
             </div>
             <br>
             <!--Show comments -->
-            <h4>There are 5 comments</h4>
+            <h4>There are {{ total_count }} comments</h4>
             <div class="row">
-                <div class="col-12" >
+                {% for comment in comments %}
+                    <div class="col-12" >
                             <hr><p><strong style="color: pink"></strong></p>
                             <div>
-                                <div><span><strong>老王</strong></span>&nbsp;<span style="color: gray">2019-05-18 14:54</span></div>
+                                <div><span><strong>{{ comment.user.username }}</strong></span>&nbsp;<span style="color: gray">{{ comment.created|date:'Y-m-d H:i' }}</span></div>
                                 <br>
-                                <p>学习了</p>
+                                <p>{{ comment.content|safe }}</p>
                             </div>
                 </div>
-                <div class="col-12">
-                    <hr><p><strong style="color: pink"></strong></p>
-                    <div>
-                        <div><span><strong>老王</strong></span>&nbsp;<span style="color: gray">2019-05-18 14:54</span></div>
-                        <br>
-                        <p>学习了</p>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <hr><p><strong style="color: pink"></strong></p>
-                    <div>
-                        <div><span><strong>老王</strong></span>&nbsp;<span style="color: gray">2019-05-18 14:54</span></div>
-                        <br>
-                        <p>学习了</p>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <hr><p><strong style="color: pink"></strong></p>
-                    <div>
-                        <div><span><strong>老王</strong></span>&nbsp;<span style="color: gray">2019-05-18 14:54</span></div>
-                        <br>
-                        <p>学习了</p>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <hr><p><strong style="color: pink"></strong></p>
-                    <div>
-                        <div><span><strong>老王</strong></span>&nbsp;<span style="color: gray">2019-05-18 14:54</span></div>
-                        <br>
-                        <p>学习了</p>
-                    </div>
-                </div>
+                {% endfor %}
                 <div class="pagenation" style="text-align: center">
                     <div id="pagination" class="page"></div>
                 </div>
@@ -165,6 +137,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 
@@ -174,7 +147,7 @@
         <h5 class="m-0 text-center text-white">Copyright @ Yangjf</h5>
     </div>
 </footer>
-
+</div>
 
 <!--ckeditor-->
 <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}" data-ckeditor-basepath="{% static 'ckeditor/ckeditor/' %}" id="ckeditor-init-script"></script>
@@ -187,16 +160,16 @@
 <script type="text/javascript">
     $(function () {
         $('#pagination').pagination({
-            currentPage: 15,
-            totalPage: 30,
+            currentPage: {{ page_num }},
+            totalPage: {{ total_page }},
             callback:function (current) {
 
-                location.href = '/';
+                location.href = '/detail/?id={{ article.id }}&page_size={{ page_size }}&page_num='+current;
             }
         })
     });
 </script>
-</div>
+
 </body>
 
 </html>
