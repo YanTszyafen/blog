@@ -44,3 +44,18 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    content = models.TextField()
+    article = models.ForeignKey(Article,on_delete=models.SET_NULL,null=True)
+    user = models.ForeignKey('users.User',on_delete=models.SET_NULL, null=True)
+    created = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.article.title
+
+    class Meta:
+        db_table = 'tb_comment'
+        verbose_name = 'Comment management'
+        verbose_name_plural = verbose_name
