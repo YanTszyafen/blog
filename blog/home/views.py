@@ -1,3 +1,11 @@
+import os
+from django.db import IntegrityError
+import urllib
+from urllib.parse import urlparse
+from urllib.request import urlopen
+from PIL import Image
+from io import BytesIO
+from django.core.files import File
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -5,21 +13,64 @@ from django.views import View
 from home.models import ArticleCategory, Article
 from django.http.response import HttpResponseNotFound
 from django.core.paginator import Paginator, EmptyPage
+from home.thefilmblog import get_article,get_detail,URL
+from users.models import User
+from django.http.response import HttpResponseBadRequest
+import logging
+logger = logging.getLogger('django')
+
+def get_blogs():
+    categories = ArticleCategory.objects.all()
+    for cat_id in range(1,4):
+        url = URL[int(cat_id)]
+        blogs = get_article(url)
+        category = ArticleCategory.objects.get(id=cat_id)
+        for blog in blogs:
+            detail_url = blog["url"]
+            detail = get_detail(detail_url)
+            author = User.objects.get(username="thefilmblog")
+            title = str(blog.get("title"))
+            avatar_url = blog.get("avatar")
+            avatar = urlparse(avatar_url).path.split('/')[-1]
+            path, header = urllib.request.urlretrieve(avatar_url, "./media/" + avatar)
+            content = str(detail[0].get("content"))
+            created = detail[0].get("created")
+            y = int(created[0:4])
+            m = int(created[5:7])
+            d = int(created[8:10])
+            H = int(created[11:13])
+            M = int(created[14:16])
+            S = int(created[17:19])
+            import datetime
+            # 2019-01-29T14:08:00+00:00
+            created_ = datetime.datetime(y, m, d, H, M, S)
+            try:
+                filmblog = Article.objects.get_or_create(
+                    avatar=avatar,
+                    title=title,
+                    category=category,
+                    defaults={"author": author, "content": content, "created": created_}
+                )
+            except:
+                IntegrityError
+
 # Create your views here.
 class IndexView(View):
     def get(self,request):
+        get_blogs()
         #1. Receive info of category
         categories = ArticleCategory.objects.all()
         # 2. Get the category id clicked by user
         cat_id = request.GET.get('cat_id',1)
-        # 4. Get paging parameters
-        page_num = request.GET.get('page_num', 1)
-        page_size = request.GET.get('page_size', 6)
         # 3. Query category by the category id
         try:
             category = ArticleCategory.objects.get(id=cat_id)
         except ArticleCategory.DoesNotExist:
             return HttpResponseNotFound('No such category!')
+
+        # 4. Get paging parameters
+        page_num = request.GET.get('page_num', 1)
+        page_size = request.GET.get('page_size', 6)
 
         # 5. Query article data by the info of paging
         articles = Article.objects.filter(category=category)

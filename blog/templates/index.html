@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf8mb4">
     <title>The Film Blog</title>
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
@@ -68,7 +68,7 @@
                 <img src="{{ article.avatar.url }}" alt="avatar" style="border-radius: 20px; max-width: 100%">
             </div>
             <div class="col">
-                <a  role="button" href="#" class="btn btn-sm mb-2 btn-warning">{{ article.category.title }}</a>
+                <a  role="button" href="/?cat_id={{ article.category.id }}" class="btn btn-sm mb-2 btn-warning">{{ article.category.title }}</a>
                 <h4>
                     <b><a href="{% url 'home:detail' %}?id={{ article.id }}" style="color: black;">{{ article.title }}</a></b>
                 </h4>

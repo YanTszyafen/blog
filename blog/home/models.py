@@ -41,6 +41,7 @@ class Article(models.Model):
         ordering = ('-created',)
         verbose_name = 'Article management'
         verbose_name_plural = verbose_name
+        unique_together = (("avatar", "title", "category"),)
 
     def __str__(self):
         return self.title
@@ -59,3 +60,5 @@ class Comment(models.Model):
         db_table = 'tb_comment'
         verbose_name = 'Comment management'
         verbose_name_plural = verbose_name
+
+
